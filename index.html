@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TERMINAL DE ACESSO</title>
+    <style>
+        body {
+            background-color: #0a0a0a;
+            color: #00ff41;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .panel {
+            border: 2px solid #00ff41;
+            padding: 30px;
+            box-shadow: 0 0 20px #00ff4188;
+            text-align: center;
+            width: 80%;
+            max-width: 400px;
+            background: rgba(0, 0, 0, 0.9);
+        }
+
+        h1 { font-size: 1.2rem; margin-bottom: 20px; text-shadow: 0 0 10px #00ff41; }
+
+        input {
+            background: transparent;
+            border: 1px solid #00ff41;
+            color: #00ff41;
+            padding: 10px;
+            width: 100%;
+            box-sizing: border-box;
+            text-align: center;
+            font-size: 1.2rem;
+            outline: none;
+            margin-bottom: 15px;
+        }
+
+        button {
+            background: #00ff41;
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+            transition: 0.3s;
+        }
+
+        button:hover { background: #008f11; box-shadow: 0 0 15px #00ff41; }
+
+        #message { margin-top: 15px; height: 20px; font-size: 0.9rem; }
+        
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="panel" id="login-panel">
+        <h1>SISTEMA DE SEGURANÇA</h1>
+        <p>DIGITE A CHAVE DE ACESSO:</p>
+        <input type="password" id="passwordInput" placeholder="********">
+        <button onclick="checkPassword()">AUTENTICAR</button>
+        <div id="message"></div>
+    </div>
+
+    <div class="panel hidden" id="success-panel">
+        <h1 style="color: #00ffff; text-shadow: 0 0 10px #00ffff;">ACESSO CONCEDIDO</h1>
+        <p>A próxima pista está atrás do quadro na sala.</p>
+        <button onclick="location.reload()">VOLTAR</button>
+    </div>
+
+    <script>
+        function checkPassword() {
+            const input = document.getElementById('passwordInput').value;
+            const msg = document.getElementById('message');
+            
+            // COLOQUE SUA SENHA AQUI (Cuidado: maiúsculas importam)
+            const senhaCorreta = "GEMINI2025"; 
+
+            if (input === senhaCorreta) {
+                document.getElementById('login-panel').classList.add('hidden');
+                document.getElementById('success-panel').classList.remove('hidden');
+            } else {
+                msg.innerText = "ERRO: SENHA INCORRETA";
+                msg.style.color = "red";
+                setTimeout(() => { msg.innerText = ""; }, 2000);
+            }
+        }
+    </script>
+</body>
+</html>
