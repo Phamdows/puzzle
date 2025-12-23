@@ -3,107 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TERMINAL DE ACESSO</title>
+    <title>SISTEMA SOBRECARREGADO</title>
     <style>
-        /* Fundo Animado que muda de cor */
         body {
-            background: linear-gradient(45deg, #ff00ff, #00ffff, #8a2be2, #ff1493);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
+            background: radial-gradient(circle, #1a0033 0%, #000 100%);
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             overflow: hidden;
+            font-family: 'Courier New', Courier, monospace;
         }
 
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        /* Efeito de Ondas de Energia Caótica ao Fundo */
+        .energy-bg {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(255, 0, 255, 0.05) 0px,
+                rgba(0, 255, 255, 0.05) 20px,
+                rgba(138, 43, 226, 0.05) 40px
+            );
+            animation: drift 10s linear infinite;
+            z-index: -1;
         }
 
-        /* Painel Central */
+        @keyframes drift {
+            from { transform: translate(-20%, -20%) rotate(0deg); }
+            to { transform: translate(0%, 0%) rotate(360deg); }
+        }
+
         .panel {
-            border: 3px solid #ffffff;
+            background: rgba(10, 0, 20, 0.85);
+            border: 2px solid #00ffff;
             padding: 30px;
-            box-shadow: 0 0 25px rgba(255, 255, 255, 0.5), inset 0 0 15px rgba(0, 0, 0, 0.3);
             text-align: center;
             width: 85%;
             max-width: 400px;
-            background: rgba(0, 0, 0, 0.7); /* Transparência para ver o fundo */
-            border-radius: 15px;
-            backdrop-filter: blur(5px);
-            color: #fff;
+            position: relative;
+            box-shadow: 0 0 15px #ff00ff, inset 0 0 20px #00ffff55;
+            border-radius: 2px;
+            backdrop-filter: blur(8px);
+            animation: flicker 0.2s infinite alternate;
         }
 
-        h1 { 
-            font-size: 1.5rem; 
-            margin-bottom: 20px; 
+        /* Efeito de oscilação de luz/energia */
+        @keyframes flicker {
+            0% { box-shadow: 0 0 15px #ff00ff, 0 0 2px #00ffff; }
+            100% { box-shadow: 0 0 25px #ff00ff, 0 0 10px #00ffff; }
+        }
+
+        h1 {
             color: #00ffff;
-            text-shadow: 0 0 10px #00ffff, 0 0 20px #ff00ff;
-            letter-spacing: 2px;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            text-shadow: 2px 2px #ff00ff, -2px -2px #000;
+            font-size: 1.4rem;
+            margin-bottom: 30px;
         }
 
-        /* Input agora mostra o texto normalmente */
         input {
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid #ff00ff;
-            color: #fff;
-            padding: 12px;
+            background: #000;
+            border: 1px solid #ff00ff;
+            color: #00ffff;
+            padding: 15px;
             width: 100%;
             box-sizing: border-box;
             text-align: center;
             font-size: 1.2rem;
             outline: none;
             margin-bottom: 20px;
-            border-radius: 8px;
-            text-transform: uppercase; /* Opcional: deixa tudo maiúsculo */
+            text-shadow: 0 0 5px #00ffff;
         }
 
         button {
-            background: linear-gradient(to right, #ff00ff, #8a2be2);
-            color: white;
-            border: none;
-            padding: 12px 20px;
+            background: transparent;
+            color: #ff00ff;
+            border: 2px solid #ff00ff;
+            padding: 12px;
             cursor: pointer;
             font-weight: bold;
             width: 100%;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: 0.3s;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            text-transform: uppercase;
+            transition: all 0.2s;
+            position: relative;
         }
 
-        button:hover { 
-            transform: scale(1.03);
-            box-shadow: 0 0 20px #ff00ff;
+        button:hover {
+            background: #ff00ff;
+            color: #000;
+            box-shadow: 0 0 30px #ff00ff;
         }
 
-        #message { margin-top: 15px; font-weight: bold; min-height: 20px; }
+        #message { 
+            margin-top: 20px; 
+            font-weight: bold; 
+            color: #ff00ff;
+            text-shadow: 0 0 5px #ff00ff;
+        }
         
         .hidden { display: none; }
 
-        /* Estilo do Sucesso */
-        #success-panel h1 { color: #00ff00; text-shadow: 0 0 10px #00ff00; }
+        /* Elementos de "Erro" no CSS */
+        .glitch-text {
+            animation: glitch 0.3s infinite;
+            color: #fff !important;
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(2px, 0); }
+            50% { transform: translate(-2px, -1px); color: #00ffff; }
+            100% { transform: translate(1px, 1px); color: #ff00ff; }
+        }
     </style>
 </head>
 <body>
 
+    <div class="energy-bg"></div>
+
     <div class="panel" id="login-panel">
-        <h1>TERMINAL DE ACESSO</h1>
-        <p>INSIRA A CHAVE:</p>
-        <input type="text" id="passwordInput" placeholder="DIGITE AQUI">
-        <button onclick="checkPassword()">VERIFICAR</button>
+        <h1>NÚCLEO DE ENERGIA</h1>
+        <p style="font-size: 0.8rem; color: #8a2be2;">ESTABILIDADE: CRÍTICA</p>
+        <input type="text" id="passwordInput" placeholder="INSERIR CÓDIGO" spellcheck="false">
+        <button onclick="checkPassword()">FORÇAR ACESSO</button>
         <div id="message"></div>
     </div>
 
     <div class="panel hidden" id="success-panel">
-        <h1>ACESSO LIBERADO</h1>
-        <p>Parabéns! A próxima etapa está desbloqueada.</p>
-        <button onclick="location.reload()">REINICIAR</button>
+        <h1 class="glitch-text">CONEXÃO ESTABELECIDA</h1>
+        <p>A energia se estabilizou. O segredo foi revelado.</p>
+        <button onclick="location.reload()">RECONECTAR</button>
     </div>
 
     <script>
@@ -112,32 +144,39 @@
         function playSound(type) {
             const oscillator = audioCtx.createOscillator();
             const gainNode = audioCtx.createGain();
+            const noiseNode = audioCtx.createBufferSource();
 
             oscillator.connect(gainNode);
             gainNode.connect(audioCtx.destination);
 
             if (type === 'success') {
-                oscillator.type = 'sine';
-                oscillator.frequency.setValueAtTime(880, audioCtx.currentTime); 
-                oscillator.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.1);
+                oscillator.type = 'triangle';
+                oscillator.frequency.setValueAtTime(200, audioCtx.currentTime); 
+                oscillator.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.3);
+                gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                oscillator.start();
+                oscillator.stop(audioCtx.currentTime + 0.4);
             } else {
-                oscillator.type = 'sawtooth';
-                oscillator.frequency.setValueAtTime(150, audioCtx.currentTime);
+                // Som de Estática/Erro Caótico
+                const bufferSize = audioCtx.sampleRate * 0.2;
+                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) { data[i] = Math.random() * 2 - 1; }
+                noiseNode.buffer = buffer;
+                const noiseGain = audioCtx.createGain();
+                noiseGain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                noiseNode.connect(noiseGain);
+                noiseGain.connect(audioCtx.destination);
+                noiseNode.start();
             }
-
-            gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
-
-            oscillator.start();
-            oscillator.stop(audioCtx.currentTime + 0.5);
         }
 
         function checkPassword() {
-            const input = document.getElementById('passwordInput').value;
+            const input = document.getElementById('passwordInput').value.trim();
             const msg = document.getElementById('message');
             
-            // ALTERE SUA SENHA AQUI
-            const senhaCorreta = "CEU123"; 
+            // SENHA
+            const senhaCorreta = "ORDO"; 
 
             if (input.toUpperCase() === senhaCorreta.toUpperCase()) {
                 playSound('success');
@@ -145,9 +184,12 @@
                 document.getElementById('success-panel').classList.remove('hidden');
             } else {
                 playSound('error');
-                msg.innerText = "ACESSO NEGADO";
-                msg.style.color = "#ff4d4d";
-                setTimeout(() => { msg.innerText = ""; }, 2000);
+                msg.innerText = "SISTEMA INSTÁVEL - TENTE NOVAMENTE";
+                msg.classList.add('glitch-text');
+                setTimeout(() => { 
+                    msg.innerText = ""; 
+                    msg.classList.remove('glitch-text');
+                }, 1500);
             }
         }
     </script>
