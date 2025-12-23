@@ -182,7 +182,7 @@
                 // --- COMANDO DE VIBRAÇÃO ---
                 if ("vibrate" in navigator) {
                     // Vibra por 500ms (meio segundo)
-                    navigator.vibrate(500); 
+                    navigator.vibrate(1000); 
                 }
 
                 body.classList.add('flash-white');
@@ -193,7 +193,7 @@
                 }, 500);
             } else {
                 playSound('error');
-                msg.innerText = "ERRO NA FREQUÊNCIA";
+                msg.innerText = "SENHA ERRADA - TENTE NOVAMENTE";
                 setTimeout(() => { msg.innerText = ""; }, 1500);
             }
         }
