@@ -14,9 +14,19 @@
             margin: 0;
             overflow: hidden;
             font-family: 'Courier New', Courier, monospace;
+            transition: background 0.5s ease;
         }
 
-        /* Efeito de Ondas de Energia Caótica ao Fundo */
+        /* Efeito de flash ao acertar */
+        .flash-white {
+            animation: flashAnim 0.8s ease-out;
+        }
+
+        @keyframes flashAnim {
+            0% { background: #fff; filter: brightness(2); }
+            100% { background: radial-gradient(circle, #1a0033 0%, #000 100%); }
+        }
+
         .energy-bg {
             position: absolute;
             width: 200%;
@@ -50,7 +60,6 @@
             animation: flicker 0.2s infinite alternate;
         }
 
-        /* Efeito de oscilação de luz/energia */
         @keyframes flicker {
             0% { box-shadow: 0 0 15px #ff00ff, 0 0 2px #00ffff; }
             100% { box-shadow: 0 0 25px #ff00ff, 0 0 10px #00ffff; }
@@ -89,7 +98,6 @@
             width: 100%;
             text-transform: uppercase;
             transition: all 0.2s;
-            position: relative;
         }
 
         button:hover {
@@ -98,98 +106,95 @@
             box-shadow: 0 0 30px #ff00ff;
         }
 
-        #message { 
-            margin-top: 20px; 
-            font-weight: bold; 
+        .caos {
             color: #ff00ff;
-            text-shadow: 0 0 5px #ff00ff;
+            text-shadow: 0 0 8px #ff00ff;
+            font-weight: bold;
+            display: inline-block;
+            animation: shakeCaos 0.2s infinite ease-in-out;
         }
-        
+
+        @keyframes shakeCaos {
+            0% { transform: translate(0px, 0px); }
+            25% { transform: translate(1px, -1px); filter: hue-rotate(45deg); }
+            50% { transform: translate(-1px, 1px); }
+            100% { transform: translate(0px, 0px); }
+        }
+
+        #message { margin-top: 20px; font-weight: bold; color: #ff4d4d; min-height: 1.2em; }
         .hidden { display: none; }
-
-        /* Elementos de "Erro" no CSS */
-        .glitch-text {
-            animation: glitch 0.3s infinite;
-            color: #fff !important;
-        }
-
-        @keyframes glitch {
-            0% { transform: translate(2px, 0); }
-            50% { transform: translate(-2px, -1px); color: #00ffff; }
-            100% { transform: translate(1px, 1px); color: #ff00ff; }
-        }
     </style>
 </head>
-<body>
+<body id="mainBody">
 
     <div class="energy-bg"></div>
 
     <div class="panel" id="login-panel">
-        <h1>NÚCLEO DE ENERGIA</h1>
-        <p style="font-size: 0.8rem; color: #8a2be2;">ESTABILIDADE: CRÍTICA</p>
-        <input type="text" id="passwordInput" placeholder="INSERIR CÓDIGO" spellcheck="false">
-        <button onclick="checkPassword()">FORÇAR ACESSO</button>
+        <h1>Painel de acesso</h1>
+        <p style="font-size: 0.8rem; color: #8a2be2;">Espaços e caracteres especiais são contados</p>
+        <input type="text" id="passwordInput" placeholder="********" spellcheck="false">
+        <button onclick="checkPassword()">Confirmar</button>
         <div id="message"></div>
     </div>
 
     <div class="panel hidden" id="success-panel">
-        <h1 class="glitch-text">CONEXÃO ESTABELECIDA</h1>
-        <p>A energia se estabilizou. O segredo foi revelado.</p>
-        <button onclick="location.reload()">RECONECTAR</button>
+        <h1 style="color: #00ff00 !important; text-shadow: 0 0 15px #00ff00;">Muito bem!</h1>
+        <p style="font-size: 1rem; color: #8a2be2;">Que lindo, passaram do 1º. <span class="caos">Agora não tem volta!</span></p>
+        <button onclick="location.reload()" style="border-color: #00ff00; color: #00ff00;">PROSSEGUIR</button>
     </div>
 
     <script>
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
         function playSound(type) {
-            const oscillator = audioCtx.createOscillator();
             const gainNode = audioCtx.createGain();
-            const noiseNode = audioCtx.createBufferSource();
-
-            oscillator.connect(gainNode);
             gainNode.connect(audioCtx.destination);
-
             if (type === 'success') {
-                oscillator.type = 'triangle';
-                oscillator.frequency.setValueAtTime(200, audioCtx.currentTime); 
-                oscillator.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.3);
-                gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
-                oscillator.start();
-                oscillator.stop(audioCtx.currentTime + 0.4);
+                const osc1 = audioCtx.createOscillator();
+                osc1.type = 'sine';
+                osc1.frequency.setValueAtTime(60, audioCtx.currentTime); 
+                osc1.frequency.exponentialRampToValueAtTime(30, audioCtx.currentTime + 0.8);
+                const gain1 = audioCtx.createGain();
+                gain1.gain.setValueAtTime(0.5, audioCtx.currentTime);
+                gain1.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.8);
+                osc1.connect(gain1); gain1.connect(audioCtx.destination);
+                osc1.start(); osc1.stop(audioCtx.currentTime + 0.8);
             } else {
-                // Som de Estática/Erro Caótico
-                const bufferSize = audioCtx.sampleRate * 0.2;
-                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-                const data = buffer.getChannelData(0);
-                for (let i = 0; i < bufferSize; i++) { data[i] = Math.random() * 2 - 1; }
-                noiseNode.buffer = buffer;
-                const noiseGain = audioCtx.createGain();
-                noiseGain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-                noiseNode.connect(noiseGain);
-                noiseGain.connect(audioCtx.destination);
-                noiseNode.start();
+                const osc = audioCtx.createOscillator();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(80, audioCtx.currentTime);
+                gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                osc.connect(gainNode);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.3);
             }
         }
 
         function checkPassword() {
-            const input = document.getElementById('passwordInput').value.trim();
+            const input = document.getElementById('passwordInput').value;
             const msg = document.getElementById('message');
+            const body = document.getElementById('mainBody');
             
-            // SENHA
             const senhaCorreta = "ORDO"; 
 
-            if (input.toUpperCase() === senhaCorreta.toUpperCase()) {
+            if (input === senhaCorreta) {
                 playSound('success');
-                document.getElementById('login-panel').classList.add('hidden');
-                document.getElementById('success-panel').classList.remove('hidden');
+                
+                // --- COMANDO DE VIBRAÇÃO ---
+                if ("vibrate" in navigator) {
+                    // Vibra por 500ms (meio segundo)
+                    navigator.vibrate(500); 
+                }
+
+                body.classList.add('flash-white');
+                setTimeout(() => {
+                    document.getElementById('login-panel').classList.add('hidden');
+                    document.getElementById('success-panel').classList.remove('hidden');
+                    body.classList.remove('flash-white');
+                }, 500);
             } else {
                 playSound('error');
-                msg.innerText = "SISTEMA INSTÁVEL - TENTE NOVAMENTE";
-                msg.classList.add('glitch-text');
-                setTimeout(() => { 
-                    msg.innerText = ""; 
-                    msg.classList.remove('glitch-text');
-                }, 1500);
+                msg.innerText = "ERRO NA FREQUÊNCIA";
+                setTimeout(() => { msg.innerText = ""; }, 1500);
             }
         }
     </script>
